@@ -12,11 +12,9 @@ class IndexController extends Controller
         $search = new App\Components\SearchComponent();
         if ($this->request->isPost()) {
             $data = $search->search($this->request->getPost()['search']);
-            // echo "<pre>";
-            // print_r($search->search($this->request->getPost()['search']));
-            // die();
             // pass data into view
             $this->view->data = $data;
+            $this->view->query = $this->request->getPost()['search'];
         }
     }
     public function bookAction()
@@ -32,9 +30,5 @@ class IndexController extends Controller
         $image = explode("/", $data['ISBN:' . $id]["preview_url"])[4];
         $this->view->data = $data['ISBN:' . $id];
         $this->view->image = "https://covers.openlibrary.org/b/olid/{$image}-L.jpg";
-        // echo "<pre>";
-        // print_r($data);
-        // echo "</pre>";
-        // die();
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Components;
 
+use Phalcon\Di\Injectable;
+
 /**
  * helper class for hitting the api and getting response
  */
-class SearchComponent
+class SearchComponent extends Injectable
 {
     /**
      * returns whatever the response of the passed url
@@ -15,6 +17,9 @@ class SearchComponent
      */
     public function search($q)
     {
+        if ($this->cache->has($q)) {
+            return $this->cache->get($q);
+        }
         $q = implode('+', explode(' ', $q));
         $url = "https://openlibrary.org/search.json?q={$q}&mode=ebooks&has_fulltext=true";
         $ch = curl_init();
@@ -25,6 +30,8 @@ class SearchComponent
         $resp = curl_exec($ch);
 
         $response = json_decode($resp, true);
+
+        $this->cache->set($q, $response);
 
         return $response;
     }

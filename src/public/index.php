@@ -55,6 +55,17 @@ $container->set(
     }
 );
 
+//cache container
+$container->setShared(
+    'cache',
+    function () {
+        $cache = new \App\Components\CacheComponent();
+        $cache = $cache->initCache();
+        return $cache;
+    }
+);
+
+
 $application = new Application($container);
 
 

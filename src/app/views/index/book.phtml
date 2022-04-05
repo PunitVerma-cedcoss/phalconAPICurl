@@ -1,8 +1,8 @@
 <?php $this->assets->outputCss(); ?>
 <div class="w-screen h-screen p-2 bg-gray-200">
     <form action="/" method="post" class="flex">
-        <input type="text" value="facts" name="search" placeholder="search books here..." class="placeholder:italic rounded-sm focus:shadow w-full" required>
-        <input type="submit" value="search" name="" class="bg-indigo-500 text-white p-2 rounded-sm ml-2 shadow">
+        <input type="text" value="<?php echo isset($query) ? $query : "facts" ?>" name="search" placeholder="search books here..." class="placeholder:italic rounded-sm focus:shadow w-full" required>
+        <input type="submit" value="search" class="bg-indigo-500 text-white p-2 rounded-sm ml-2 shadow">
     </form>
     <div class="details grid grid-cols-12 p-2 bg-white rounded-sm shadow m-3">
         <div class="first p-3 col-span-4 border-r flex justify-center items-center flex-col">

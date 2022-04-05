@@ -1,0 +1,20 @@
+* {
+  transition: 0.3s all ease;
+}
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(45, 30, 180, 0.562);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(45, 30, 180);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.card-img:hover {
+  transform: scale(1.1);
+}

@@ -1,0 +1,71 @@
+<?php $this->assets->outputCss(); ?>
+<div class="h-screen w-screen p-2 bg-gray-200 flex flex-col">
+    <form action="/" method="post" class="flex">
+        <input type="text" value="facts" name="search" placeholder="search books here..." class="placeholder:italic rounded-sm focus:shadow w-full" required>
+        <input type="submit" value="search" name="" class="bg-indigo-500 text-white p-2 rounded-sm ml-2 shadow">
+    </form>
+    <?php
+    if (!isset($data)) {
+    ?>
+        <div class="overflow-hidden p-32 w-full flex justify-center items-center">
+            <p class="text-8xl font-black"><i class="fa fa-search"></i> search ...</p>
+        </div>
+    <?php
+    } else {
+    ?>
+        <div class="grow books overflow-auto divide-y m-2 grid gid-cols-12">
+
+            <?php
+            foreach ($data["docs"] as $book) {
+                // echo "<pre>";
+                // print_r($book["title"]);
+            ?>
+                <div class="card rounded-sm bg-white flex p-2 m-2 shadow">
+                    <?php
+                    if (isset($book["lending_edition_s"])) {
+                    ?>
+                        <img src="<?php echo "https://covers.openlibrary.org/b/olid/" . $book["lending_edition_s"] . "-M.jpg" ?>" class="rounded-sm border" style="width: 180px;height:270px" alt="N/A">
+                    <?php
+                    } else {
+                    ?>
+                        <img src="<?php echo "https://covers.openlibrary.org/b/olid/" . $book["ia"][0] . "-M.jpg" ?>" class="rounded-sm border" style="width: 180px;height:270px" alt="N/A">
+                    <?php
+                    }
+                    ?>
+                    <div class="details p-2 flex flex-col grow">
+                        <a href="/index/book?id=<?php echo $book["isbn"][0]; ?>">
+                            <p class="title text-xl font-medium"><?php echo $book["title"]; ?></p>
+                        </a>
+                        <p>by <span class="text-indigo-500"><?php
+                                                            echo implode(",", $book["author_name"]);
+                                                            ?></span></p>
+                        <p class="text-sm text-gray-500">First published in <?php echo $book["first_publish_year"]; ?></p>
+                        <p><?php echo $book["edition_count"]; ?> <span class="text-indigo-500">editions</span> in <?php echo isset($book["language"]) ? count($book["language"]) : 0; ?> languages <span class="text-indigo-500"><?php echo count($book["ia"]); ?></span> previables</p>
+                        <div class="previews overflow-auto flex items-center grow">
+                            <?php
+                            for ($i = 0; $i < count($book["ia"]); $i++) {
+                            ?>
+                                <!-- <a class="mr-2 " href="https://openlibrary.org/works/OL45883W/Fantastic_Mr._Fox?edition=ia:"> -->
+                                <img class="mr-2  shadow-sm card-img rounded-sm hover:scale-115" src="https://archive.org/services/img/<?php echo $book["ia"][$i] ?>" style="width: 50px;height:80px" alt="">
+                                <!-- </a> -->
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="buttons flex justify-center items-center flex-col border-l pl-2">
+                        <a href="/index/book?id=<?php echo $book["isbn"][0]; ?>">
+                            <button class="w-72 text-white bg-indigo-500 p-2 rounded-sm w-full shadow"><i class="fa fa-book"></i> want to read</button>
+                        </a>
+                        <span class="my-3"></span>
+                        <button class="w-72 text-white bg-indigo-800 p-2 rounded-sm w-full shadow"><i class="fa fa-trash"></i> want to throw</button>
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
+        </div>
+    <?php
+    }
+    ?>
+</div>

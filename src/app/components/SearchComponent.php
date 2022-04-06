@@ -3,6 +3,7 @@
 namespace App\Components;
 
 use Phalcon\Di\Injectable;
+use GuzzleHttp\Client;
 
 /**
  * helper class for hitting the api and getting response
@@ -17,21 +18,17 @@ class SearchComponent extends Injectable
      */
     public function search($q)
     {
-        if ($this->cache->has($q)) {
-            return $this->cache->get($q);
+        if ($this->cache->has(implode("", explode(" ", $q)))) {
+            return $this->cache->get(implode("", explode(" ", $q)));
         }
-        $q = implode('+', explode(' ', $q));
-        $url = "https://openlibrary.org/search.json?q={$q}&mode=ebooks&has_fulltext=true";
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $resp = curl_exec($ch);
-
-        $response = json_decode($resp, true);
-
-        $this->cache->set($q, $response);
+        $client = new Client();
+        $qq = implode('+', explode(' ', $q));
+        $url = "https://openlibrary.org/search.json?q={$qq}&mode=ebooks&has_fulltext=true";
+        $response = $client->get(
+            $url,
+        );
+        $response = json_decode($response->getBody()->getContents(), true);
+        $this->cache->set(implode("", explode(" ", $q)), $response);
 
         return $response;
     }
@@ -49,16 +46,12 @@ class SearchComponent extends Injectable
     }
     public function getBookById($q)
     {
+        $client = new Client();
         $url = "https://openlibrary.org/api/books?bibkeys=ISBN:{$q}&jscmd=details&format=json";
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $resp = curl_exec($ch);
-
-        $response = json_decode($resp, true);
-
+        $response = $client->get(
+            $url,
+        );
+        $response = json_decode($response->getBody()->getContents(), true);
         return $response;
     }
 }
